@@ -1,0 +1,86 @@
+# Abre el mes en la calculadora de remuneraciones, todos los 15.
+#
+# El 15 ya están publicadas las dos cifras que cambian cada mes: la UTM (sale a
+# inicios de mes) y la UF del último día (el Banco Central la publica el 9).
+# El script copia los parámetros del mes anterior con la UF y la UTM nuevas,
+# corre los tests del motor, sube el cambio a main y publica el sitio.
+#
+# Lo que NO actualiza solo: topes imponibles (enero), ingreso mínimo (cuando
+# sale la ley), comisiones de AFP y tasa SIS (cambia por trimestre). Esos meses
+# hay que corregir el archivo generado a mano.
+#
+# Si algo falla (mindicador.cl caído, UF o UTM que se mueven más de 3%, tests
+# en rojo), GitHub avisa por correo y el mes queda sin abrir. Se puede volver a
+# correr a mano desde Actions → «Abrir mes» → Run workflow.
+name: Abrir mes de remuneraciones
+
+on:
+  schedule:
+    - cron: "0 12 15 * *" # día 15, 09:00 en Chile
+  workflow_dispatch:
+    inputs:
+      mes:
+        description: "Mes a abrir (AAAA-MM). Vacío = mes en curso."
+        required: false
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: abrir-mes
+  cancel-in-progress: false
+
+jobs:
+  abrir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Generar parámetros del mes
+        id: abrir
+        env:
+          MES: ${{ inputs.mes }}
+        run: node scripts/abrir-mes.mjs ${MES:+"$MES"}
+
+      - name: Tests del motor de remuneraciones
+        if: steps.abrir.outputs.creado == 'true'
+        run: npm run test:remuneraciones
+
+      - name: Subir a main
+        if: steps.abrir.outputs.creado == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/lib/remuneraciones/parametros
+          git commit -m "Abrir ${{ steps.abrir.outputs.etiqueta }} en la calculadora de remuneraciones" \
+            -m "UF ${{ steps.abrir.outputs.uf }}, UTM ${{ steps.abrir.outputs.utm }}. Resto copiado de ${{ steps.abrir.outputs.base }}."
+          git push origin HEAD:main
+
+      # Un push hecho con GITHUB_TOKEN no dispara otros workflows: se lanzan a mano.
+      - name: Publicar el sitio
+        if: steps.abrir.outputs.creado == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run deploy.yml --ref main
+          gh workflow run publicar-vps.yml --ref main
+
+      - name: Resumen
+        if: steps.abrir.outputs.creado == 'true'
+        run: |
+          {
+            echo "### ${{ steps.abrir.outputs.etiqueta }} abierto"
+            echo ""
+            echo "- UF: ${{ steps.abrir.outputs.uf }}"
+            echo "- UTM: ${{ steps.abrir.outputs.utm }}"
+            echo "- Copiado de: ${{ steps.abrir.outputs.base }}"
+            echo ""
+            echo "Revisa a mano si este mes cambió el ingreso mínimo, los topes, la tasa SIS o alguna comisión de AFP."
+          } >> "$GITHUB_STEP_SUMMARY"
