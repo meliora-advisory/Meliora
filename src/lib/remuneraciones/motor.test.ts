@@ -12,6 +12,7 @@ import { boletaDesdeBruto, boletaDesdeLiquido } from "./honorarios.ts";
 import { parametros202607 as julio } from "./parametros/2026-07.ts";
 import { parametros202608 as agosto } from "./parametros/2026-08.ts";
 import { parametros202609 as septiembre } from "./parametros/2026-09.ts";
+import { parametros202610 as octubre } from "./parametros/2026-10.ts";
 
 let fallas = 0;
 
@@ -163,6 +164,38 @@ console.log("\nCaso obligatorio — liquidación real septiembre 2026 (isapre ba
   eq("Impuesto único", liq.impuesto, 22224);
   eq("Total descuentos", liq.totalDescuentos, 460330);
   eq("Líquido", liq.liquido, 1677095);
+}
+
+// ── Caso obligatorio: liquidación real de octubre 2026 ──
+//
+// El mismo contrato del caso de julio, con la UF y la UTM de octubre.
+console.log("\nCaso obligatorio — liquidación real octubre 2026 (sobre el tope)");
+{
+  const liq = calcularTrabajador(
+    {
+      sueldoBase: 5161047,
+      modoGratificacion: "legal",
+      afpKey: "provida", // 11,45%
+      salud: "isapre",
+      planIsapreUF: 6.958,
+      contrato: "indefinido",
+      colacion: 300000,
+      movilizacion: 250000,
+    },
+    octubre
+  );
+  eq("Gratificación (tope legal)", liq.gratificacion, 219115);
+  eq("Total imponible", liq.totalImponible, 5380162);
+  eq("Base topeada (90 UF)", liq.baseCotizacion, 3712287);
+  eq("AFP Provida (11,45%)", liq.afp, 425057);
+  eq("Salud 7%", liq.salud7, 259860);
+  eq("Plan isapre (6,958 UF)", liq.planIsapre, 287001);
+  eq("Adicional isapre", liq.adicionalIsapre, 27141);
+  eq("Seguro de cesantía", liq.cesantiaTrabajador, 32281);
+  eq("Base afecta a impuesto", liq.baseTributable, 4662964);
+  eq("Impuesto único", liq.impuesto, 305542);
+  eq("Total descuentos", liq.totalDescuentos, 1049881);
+  eq("Líquido", liq.liquido, 4880281);
 }
 
 // ── El tope de la rebaja de salud: 7% del límite imponible ──
