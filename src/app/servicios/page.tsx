@@ -113,6 +113,14 @@ export default function ServiciosPage() {
                   </p>
                   <p className="text-sm text-slate-600">{s.forWho}</p>
                 </div>
+                {s.id === "cfo" && (
+                  <Link
+                    href="/cfo-externo"
+                    className="mt-6 inline-block text-sm font-semibold text-emerald"
+                  >
+                    Qué es un CFO externo y cuánto cuesta
+                  </Link>
+                )}
               </div>
               <div>
                 <div className="rounded-2xl border border-slate-200 bg-white p-8">
