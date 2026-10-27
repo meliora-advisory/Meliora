@@ -8,6 +8,7 @@ const articulo = articulos.find(
 )!;
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/recursos/reforma-previsional-2026-empleadores/" },
   title: `${articulo.titulo} | Meliora Advisory`,
   description: articulo.bajada,
 };

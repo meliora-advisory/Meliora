@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/planes/" },
   title: "Planes — Servicio Integral Meliora | Meliora Advisory",
   description:
     "Un servicio modular y escalable para PyMEs en Chile: contabilidad, remuneraciones y reportería en tiempo y forma, con acompañamiento mes a mes, sobre tu sistema o el nuestro. Sin permanencia mínima y cotización a la medida.",

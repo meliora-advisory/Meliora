@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
+  robots: { index: false, follow: true },
+  alternates: { canonical: "/contacto/gracias/" },
   title: "Mensaje enviado — Meliora Advisory",
   description: "Gracias por escribirnos. Te responderemos a la brevedad.",
 };

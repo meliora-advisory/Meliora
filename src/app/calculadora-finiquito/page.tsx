@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CalculadoraFiniquito } from "@/components/CalculadoraFiniquito";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/calculadora-finiquito/" },
   title:
     "Calculadora de Finiquito Chile 2026 — Indemnización y Vacaciones | Meliora Advisory",
   description:

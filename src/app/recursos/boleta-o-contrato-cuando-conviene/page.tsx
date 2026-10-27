@@ -8,6 +8,7 @@ const articulo = articulos.find(
 )!;
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/recursos/boleta-o-contrato-cuando-conviene/" },
   title: `${articulo.titulo} | Meliora Advisory`,
   description: articulo.bajada,
 };

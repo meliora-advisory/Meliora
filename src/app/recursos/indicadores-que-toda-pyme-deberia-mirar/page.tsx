@@ -8,6 +8,7 @@ const articulo = articulos.find(
 )!;
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/recursos/indicadores-que-toda-pyme-deberia-mirar/" },
   title: `${articulo.titulo} | Meliora Advisory`,
   description: articulo.bajada,
 };

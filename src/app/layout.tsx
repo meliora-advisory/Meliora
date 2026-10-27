@@ -21,6 +21,7 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://melioraadvisory.cl"),
   title: "Meliora Advisory — Asesoría financiera, contable y de gestión para PyMEs",
   description:
     "Tu contador registra y declara; Meliora te entrega la información como la necesita quien dirige el negocio: reportería gerencial en tiempo y forma, con acompañamiento mes a mes, sobre Softland, Softland Cloud o cualquier otro sistema.",

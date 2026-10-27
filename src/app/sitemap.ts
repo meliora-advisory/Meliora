@@ -26,7 +26,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   return routes.map((route) => ({
-    url: `${BASE_URL}${route}`,
+    // El sitio usa trailingSlash: las URLs sin barra final redirigen (308).
+    url: `${BASE_URL}${route}/`,
     lastModified: new Date(),
     changeFrequency: "monthly",
     priority: route === "" ? 1 : 0.8,
