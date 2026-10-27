@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CalculadoraRemuneraciones } from "@/components/CalculadoraRemuneraciones";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/calculadora/" },
   title:
     "Calculadora Salarial Chile 2026 — Sueldo Líquido y Costo de Contratación | Meliora Advisory",
   description:

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CalculadoraHonorarios } from "@/components/CalculadoraHonorarios";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/calculadora-honorarios/" },
   title:
     "Calculadora de Boleta de Honorarios 2026 — Retención 15,25% | Meliora Advisory",
   description:

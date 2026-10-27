@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ContabilidadFlowDiagram } from "@/components/ContabilidadFlowDiagram";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/servicios/" },
   title: "Servicios — CFO Externo, Contabilidad y Dashboards Softland | Meliora Advisory",
   description:
     "CFO as a Service, Contabilidad y Remuneraciones, Consultoría de Gestión, y dashboards de reportería gerencial automatizados sobre Softland, Softland Cloud u otro ERP. Tres líneas de servicio financiero para PyMEs en Chile.",

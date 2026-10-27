@@ -8,6 +8,7 @@ const articulo = articulos.find(
 )!;
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/recursos/cuanto-cuesta-contratar-trabajador-chile/" },
   title: `${articulo.titulo} | Meliora Advisory`,
   description: articulo.bajada,
 };

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ContactForm } from "@/components/ContactForm";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/contacto/" },
   title: "Contacto — Meliora Advisory",
   description:
     "Agenda una reunión gratuita con Meliora Advisory. Conversemos sobre el orden financiero que tu PyME necesita.",

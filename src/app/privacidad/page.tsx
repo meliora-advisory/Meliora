@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/privacidad/" },
   title: "Política de Privacidad — Meliora Advisory",
   description:
     "Qué datos recolecta melioraadvisory.cl, para qué se usan y cómo solicitar su eliminación.",

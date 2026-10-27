@@ -3,6 +3,7 @@ import Link from "next/link";
 import { IndicadoresHoy } from "@/components/IndicadoresHoy";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/indicadores/" },
   title: "Indicadores Económicos de Hoy: UF, UTM, Dólar, IPC | Meliora Advisory",
   description:
     "Valor de la UF hoy, dólar observado, euro, UTM, IPC y TPM actualizados con la serie oficial. Indicadores económicos de Chile al día, gratis.",

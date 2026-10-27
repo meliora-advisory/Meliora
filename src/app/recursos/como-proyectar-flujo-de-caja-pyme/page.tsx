@@ -8,6 +8,7 @@ const articulo = articulos.find(
 )!;
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/recursos/como-proyectar-flujo-de-caja-pyme/" },
   title: `${articulo.titulo} | Meliora Advisory`,
   description: articulo.bajada,
 };

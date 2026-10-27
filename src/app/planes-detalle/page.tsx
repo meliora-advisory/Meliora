@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/planes-detalle/" },
   robots: { index: false, follow: false },
   title: "Planes y Precios (detalle) — Meliora Advisory",
   description:

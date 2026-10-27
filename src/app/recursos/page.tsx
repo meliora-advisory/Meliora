@@ -3,6 +3,7 @@ import Link from "next/link";
 import { articulos } from "@/lib/recursos";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/recursos/" },
   title: "Recursos para PyMEs — Finanzas, Remuneraciones y Tributario | Meliora Advisory",
   description:
     "Guías prácticas para dueños de pymes en Chile: costo de contratación, boleta vs contrato, reforma previsional, flujo de caja e indicadores de gestión.",

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DiagnosticoTool } from "@/components/DiagnosticoTool";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/diagnostico/" },
   title: "Diagnóstico Financiero Express — Meliora Advisory",
   description:
     "Evalúa gratis en 3 minutos la salud financiera de tu PyME: visibilidad de indicadores, proyección de caja, orden contable y procesos. Recibe un plan de acción concreto.",

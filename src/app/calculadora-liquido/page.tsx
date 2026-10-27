@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CalculadoraLiquido } from "@/components/CalculadoraLiquido";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/calculadora-liquido/" },
   title:
     "Calculadora de Sueldo Líquido a Bruto Chile 2026 — ¿Cuánto Sueldo Base Poner? | Meliora Advisory",
   description:
