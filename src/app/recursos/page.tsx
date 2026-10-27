@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     title: "Recursos para PyMEs — Meliora Advisory",
     description:
       "Guías prácticas de finanzas, remuneraciones y tributario para pymes chilenas.",
-    url: "https://melioraadvisory.cl/recursos",
+    url: "https://melioraadvisory.cl/recursos/",
   },
 };
 

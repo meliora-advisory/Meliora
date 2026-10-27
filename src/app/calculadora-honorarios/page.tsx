@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     title: "Calculadora de Boleta de Honorarios 2026 — Chile",
     description:
       "Bruto a líquido y líquido a bruto con la retención vigente del 15,25%.",
-    url: "https://melioraadvisory.cl/calculadora-honorarios",
+    url: "https://melioraadvisory.cl/calculadora-honorarios/",
   },
 };
 
@@ -53,7 +53,7 @@ const jsonLd = [
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Calculadora de Boleta de Honorarios 2026",
-    url: "https://melioraadvisory.cl/calculadora-honorarios",
+    url: "https://melioraadvisory.cl/calculadora-honorarios/",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Web",
     offers: { "@type": "Offer", price: "0", priceCurrency: "CLP" },

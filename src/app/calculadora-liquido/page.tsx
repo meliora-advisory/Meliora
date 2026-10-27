@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     title: "Calculadora de líquido a bruto — Chile 2026",
     description:
       "Fija el líquido que quieres pagar y despeja el sueldo base, el bono o la colación. Con el costo real para la empresa.",
-    url: "https://melioraadvisory.cl/calculadora-liquido",
+    url: "https://melioraadvisory.cl/calculadora-liquido/",
   },
 };
 
@@ -53,7 +53,7 @@ const jsonLd = [
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Calculadora de sueldo líquido a bruto",
-    url: "https://melioraadvisory.cl/calculadora-liquido",
+    url: "https://melioraadvisory.cl/calculadora-liquido/",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Web",
     offers: { "@type": "Offer", price: "0", priceCurrency: "CLP" },

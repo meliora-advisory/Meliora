@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     title: "Calculadora Salarial — Chile 2026",
     description:
       "De bruto a líquido con desglose completo, y el costo real de contratar para tu pyme: cesantía, SIS, mutual y reforma previsional.",
-    url: "https://melioraadvisory.cl/calculadora",
+    url: "https://melioraadvisory.cl/calculadora/",
   },
 };
 
@@ -55,7 +55,7 @@ const jsonLd = [
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Calculadora Salarial",
-    url: "https://melioraadvisory.cl/calculadora",
+    url: "https://melioraadvisory.cl/calculadora/",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Web",
     offers: { "@type": "Offer", price: "0", priceCurrency: "CLP" },

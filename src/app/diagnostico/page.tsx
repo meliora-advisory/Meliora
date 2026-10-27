@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     title: "Diagnóstico Financiero Express para PyMEs",
     description:
       "10 preguntas, 3 minutos. Descubre las brechas financieras de tu PyME y por dónde partir a cerrarlas.",
-    url: "https://melioraadvisory.cl/diagnostico",
+    url: "https://melioraadvisory.cl/diagnostico/",
   },
 };
 
