@@ -14,6 +14,8 @@ export function ArticuloLayout({
     headline: articulo.titulo,
     description: articulo.bajada,
     datePublished: articulo.fecha,
+    dateModified: articulo.fecha,
+    image: "https://melioraadvisory.cl/og-image.png",
     inLanguage: "es-CL",
     author: {
       "@type": "Organization",
@@ -25,7 +27,7 @@ export function ArticuloLayout({
       name: "Meliora Advisory",
       url: "https://melioraadvisory.cl",
     },
-    mainEntityOfPage: `https://melioraadvisory.cl/recursos/${articulo.slug}`,
+    mainEntityOfPage: `https://melioraadvisory.cl/recursos/${articulo.slug}/`,
   };
 
   return (

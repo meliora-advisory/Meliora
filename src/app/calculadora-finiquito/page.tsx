@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     title: "Calculadora de Finiquito — Chile 2026",
     description:
       "Indemnización por años de servicio, aviso previo y feriado proporcional según la causal.",
-    url: "https://melioraadvisory.cl/calculadora-finiquito",
+    url: "https://melioraadvisory.cl/calculadora-finiquito/",
   },
 };
 
@@ -53,7 +53,7 @@ const jsonLd = [
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Calculadora de Finiquito Chile",
-    url: "https://melioraadvisory.cl/calculadora-finiquito",
+    url: "https://melioraadvisory.cl/calculadora-finiquito/",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Web",
     offers: { "@type": "Offer", price: "0", priceCurrency: "CLP" },

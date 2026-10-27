@@ -19,13 +19,50 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Indicadores económicos de hoy — Chile",
     description: "UF, dólar, euro, UTM, IPC y TPM actualizados al día.",
-    url: "https://melioraadvisory.cl/indicadores",
+    url: "https://melioraadvisory.cl/indicadores/",
   },
+};
+
+const faqs = [
+  {
+    q: "¿Qué es la UF y cómo cambia su valor?",
+    a: "La Unidad de Fomento es una unidad de cuenta reajustable que calcula el Banco Central de Chile. Su valor cambia todos los días: entre el 10 de un mes y el 9 del mes siguiente se reajusta de forma diaria según la variación del IPC del mes anterior. Por eso los contratos, arriendos y créditos en UF mantienen su valor real frente a la inflación.",
+  },
+  {
+    q: "¿Qué es la UTM y para qué se usa?",
+    a: "La Unidad Tributaria Mensual es una unidad que fija el SII cada mes y se reajusta según el IPC. Se usa para expresar multas, tramos del impuesto único de segunda categoría, montos de impuestos y otros valores tributarios. Su valor es fijo durante todo el mes.",
+  },
+  {
+    q: "¿Qué es el dólar observado?",
+    a: "Es el tipo de cambio que calcula el Banco Central con las operaciones de compra y venta de dólares del día hábil anterior en el mercado cambiario formal. Se publica en el Diario Oficial y es la referencia habitual para contratos, facturas en moneda extranjera y la contabilidad.",
+  },
+  {
+    q: "¿Qué es la TPM?",
+    a: "La Tasa de Política Monetaria es la tasa de interés que fija el Consejo del Banco Central en sus reuniones de política monetaria. Es la principal herramienta para controlar la inflación e influye en las tasas de los créditos y depósitos de bancos y empresas.",
+  },
+  {
+    q: "¿Cómo afectan estos indicadores a una pyme?",
+    a: "La UF define los topes imponibles de las remuneraciones, el tope de 90 UF de las indemnizaciones y el valor de muchos arriendos y créditos. La UTM fija los tramos del impuesto a los sueldos. El dólar mueve el costo de importaciones y las facturas en moneda extranjera. Mirarlos cada mes ayuda a proyectar costos y caja con números reales.",
+  },
+];
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.q,
+    acceptedAnswer: { "@type": "Answer", text: faq.a },
+  })),
 };
 
 export default function IndicadoresPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <section className="bg-navy py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <p className="text-emerald font-semibold text-sm tracking-wide uppercase mb-4">
@@ -82,6 +119,22 @@ export default function IndicadoresPage() {
                 <p className="text-base font-semibold text-navy mb-1">{h.title}</p>
                 <p className="text-sm text-slate-500">{h.desc}</p>
               </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-16 sm:py-20 bg-white border-t border-slate-100">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-navy text-center mb-12">
+            Preguntas frecuentes sobre los indicadores
+          </h2>
+          <div className="max-w-3xl mx-auto space-y-8">
+            {faqs.map((faq) => (
+              <div key={faq.q}>
+                <h3 className="text-base font-semibold text-navy mb-2">{faq.q}</h3>
+                <p className="text-sm text-slate-500 leading-relaxed">{faq.a}</p>
+              </div>
             ))}
           </div>
         </div>
