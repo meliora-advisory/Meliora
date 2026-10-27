@@ -53,16 +53,16 @@ export function Footer() {
             </h4>
             <ul className="space-y-2">
               {[
-                "CFO as a Service",
-                "Contabilidad y Remuneraciones",
-                "Consultoría de Gestión",
+                { href: "/cfo-externo", label: "CFO as a Service" },
+                { href: "/servicios#contabilidad", label: "Contabilidad y Remuneraciones" },
+                { href: "/servicios#consultoria", label: "Consultoría de Gestión" },
               ].map((s) => (
-                <li key={s}>
+                <li key={s.label}>
                   <Link
-                    href="/servicios"
+                    href={s.href}
                     className="text-sm hover:text-white transition-colors"
                   >
-                    {s}
+                    {s.label}
                   </Link>
                 </li>
               ))}
