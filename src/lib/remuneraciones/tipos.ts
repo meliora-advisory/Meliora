@@ -50,6 +50,12 @@ export interface ParametrosPeriodo {
   /** Retención de boletas de honorarios (Ley 21.133), en % — tasa anual */
   retencionHonorarios: number;
   tramosImpuesto: TramoImpuesto[];
+  /**
+   * Asignación familiar por carga (DFL 150), de menor a mayor ingreso. Un
+   * trabajador cae en el primer tramo cuyo `hasta` alcanza su remuneración
+   * mensual; sobre el último tramo no recibe asignación (tramo D).
+   */
+  asignacionFamiliar: { tramo: string; hasta: number; monto: number }[];
 }
 
 export interface EntradaTrabajador {
@@ -68,6 +74,12 @@ export interface EntradaTrabajador {
   colacion?: number;
   movilizacion?: number;
   otrosDescuentos?: number;
+  /** Cargas familiares que dan derecho a asignación familiar */
+  cargasFamiliares?: number;
+  /** Días del mes sin goce de sueldo (inasistencias, permisos sin pago) */
+  diasAusentes?: number;
+  /** Días con licencia médica: el empleador no paga sueldo, lo cubre el subsidio */
+  diasLicencia?: number;
 }
 
 export interface EntradaEmpleador extends EntradaTrabajador {
@@ -76,7 +88,20 @@ export interface EntradaEmpleador extends EntradaTrabajador {
 }
 
 export interface LiquidacionTrabajador {
+  /** Sueldo base pagado: el pactado proporcional a los días trabajados */
   sueldoBase: number;
+  /** Sueldo base pactado del mes completo */
+  sueldoBasePactado: number;
+  /** Días trabajados sobre 30 */
+  diasTrabajados: number;
+  diasAusentes: number;
+  diasLicencia: number;
+  /** Lo que se deja de pagar por ausencias y licencia en sueldo base, gratificación, colación y movilización */
+  descuentoDias: number;
+  /** Asignación familiar del mes (no imponible, ya proporcional a los días trabajados) */
+  asignacionFamiliar: number;
+  /** Letra del tramo de asignación familiar ("D" si no corresponde pago) */
+  tramoAsignacion: string;
   gratificacion: number;
   horasExtra: number;
   otrosImponibles: number;

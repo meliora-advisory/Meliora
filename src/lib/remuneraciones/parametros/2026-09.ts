@@ -50,4 +50,11 @@ export const parametros202609: ParametrosPeriodo = {
     { hastaUTM: 310, factor: 0.35, rebajaUTM: 23.32 },
     { hastaUTM: Infinity, factor: 0.4, rebajaUTM: 38.82 },
   ],
+  // Asignación familiar vigente desde el 01-05-2026 (Ley 21.830; dictamen SUSESO
+  // O-01-S-02728-2026). Los tramos de ingreso se reajustan por decreto.
+  asignacionFamiliar: [
+    { tramo: "A", hasta: 649039, monto: 22601 },
+    { tramo: "B", hasta: 947990, monto: 13870 },
+    { tramo: "C", hasta: 1478539, monto: 4382 },
+  ],
 };

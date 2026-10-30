@@ -387,6 +387,117 @@ console.log("\nDesde el líquido — despejar sueldo base, bono o no imponible")
   eq("Objetivo ya superado: no hace falta bono", yaSuperado.valor, 0);
 }
 
+
+// ── Asignación familiar y días sin trabajar ──
+console.log("\nAsignación familiar (octubre 2026, vigente desde 01-05-2026)");
+{
+  const base = {
+    modoGratificacion: "ninguna" as const,
+    afpKey: "modelo",
+    salud: "fonasa" as const,
+    contrato: "indefinido" as const,
+  };
+  const af = (sueldo: number, cargas: number) =>
+    calcularTrabajador({ ...base, sueldoBase: sueldo, cargasFamiliares: cargas }, octubre);
+
+  const l = af(600000, 2);
+  eq("Tramo A, 2 cargas: 2 × 22.601", l.asignacionFamiliar, 45202);
+  ok("Tramo A", l.tramoAsignacion === "A");
+  eq("Líquido suma la asignación sin cotizarla", l.liquido, af(600000, 0).liquido + 45202);
+  eq("Total imponible no cambia con cargas", l.totalImponible, 600000);
+  eq("Base tributable no cambia con cargas", l.baseTributable, af(600000, 0).baseTributable);
+
+  eq("Tope tramo A (649.039)", af(649039, 1).asignacionFamiliar, 22601);
+  eq("Pasa a tramo B (649.040)", af(649040, 1).asignacionFamiliar, 13870);
+  eq("Tope tramo B (947.990)", af(947990, 3).asignacionFamiliar, 41610);
+  eq("Tramo C (947.991)", af(947991, 1).asignacionFamiliar, 4382);
+  eq("Tope tramo C (1.478.539)", af(1478539, 2).asignacionFamiliar, 8764);
+  eq("Tramo D (1.478.540): sin asignación", af(1478540, 2).asignacionFamiliar, 0);
+  ok("Tramo D rotulado", af(1478540, 2).tramoAsignacion === "D");
+  eq("Sin cargas no hay asignación", af(600000, 0).asignacionFamiliar, 0);
+
+  // Costo empleador: la asignación se paga, así que entra al costo total
+  const e0 = calcularEmpleador({ ...base, sueldoBase: 600000 }, octubre);
+  const e2 = calcularEmpleador({ ...base, sueldoBase: 600000, cargasFamiliares: 2 }, octubre);
+  eq("Costo total sube lo que paga de asignación", e2.costoTotal - e0.costoTotal, 45202);
+  eq("Aportes patronales no cambian", e2.totalAportes, e0.totalAportes);
+}
+
+console.log("\nDías ausentes y licencia médica");
+{
+  const base = {
+    sueldoBase: 900000,
+    modoGratificacion: "legal" as const,
+    afpKey: "modelo",
+    salud: "fonasa" as const,
+    contrato: "indefinido" as const,
+  };
+  const completo = calcularTrabajador(base, octubre);
+  eq("Sin ausencias: 30 días", completo.diasTrabajados, 30);
+  eq("Sin ausencias: sin descuento", completo.descuentoDias, 0);
+
+  const a = calcularTrabajador({ ...base, diasAusentes: 3 }, octubre);
+  eq("3 ausentes: sueldo base 27/30", a.sueldoBase, 810000);
+  eq("3 ausentes: gratificación topeada proporcional (27/30)", a.gratificacion, 197204);
+  eq("3 ausentes: descuento base + gratificación", a.descuentoDias, 90000 + (219115 - 197204));
+  eq("Pactado se conserva", a.sueldoBasePactado, 900000);
+
+  const sinTope = calcularTrabajador({ ...base, sueldoBase: 700000, diasAusentes: 3 }, octubre);
+  eq("Gratificación 25% del proporcional (bajo el tope)", sinTope.gratificacion, 157500);
+
+  const l = calcularTrabajador({ ...base, diasLicencia: 10 }, octubre);
+  eq("10 de licencia: sueldo base 20/30", l.sueldoBase, 600000);
+  eq("10 de licencia: días trabajados", l.diasTrabajados, 20);
+
+  const m = calcularTrabajador({ ...base, diasAusentes: 2, diasLicencia: 3 }, octubre);
+  eq("Ausentes + licencia suman: 25/30", m.sueldoBase, 750000);
+
+  // Tope de la gratificación legal proporcional a los días
+  const alto = { ...base, sueldoBase: 3000000 };
+  const topeCompleto = calcularTrabajador(alto, octubre).gratificacion;
+  eq("Gratificación topeada completa", topeCompleto, 219115);
+  eq(
+    "Tope de gratificación proporcional (15/30)",
+    calcularTrabajador({ ...alto, diasAusentes: 15 }, octubre).gratificacion,
+    Math.round(219115 / 2)
+  );
+
+  const man = calcularTrabajador(
+    { ...base, modoGratificacion: "manual", gratificacionManual: 100000, diasAusentes: 6 },
+    octubre
+  );
+  eq("Gratificación pactada proporcional (24/30)", man.gratificacion, 80000);
+
+  // Horas extra siguen valorizadas sobre el sueldo pactado
+  eq(
+    "Hora extra sobre sueldo pactado",
+    calcularTrabajador({ ...base, horasExtra: 4, diasAusentes: 5 }, octubre).horasExtra,
+    calcularTrabajador({ ...base, horasExtra: 4 }, octubre).horasExtra
+  );
+
+  // Asignación familiar proporcional a los días trabajados
+  const conAsig = calcularTrabajador(
+    { ...base, sueldoBase: 500000, modoGratificacion: "ninguna", cargasFamiliares: 2, diasAusentes: 15 },
+    octubre
+  );
+  eq("Asignación proporcional (15/30): 45.202 / 2", conAsig.asignacionFamiliar, 22601);
+
+  // Colación y movilización también por días trabajados
+  const noImp = calcularTrabajador(
+    { ...base, colacion: 60000, movilizacion: 30000, diasAusentes: 5, diasLicencia: 5 },
+    octubre
+  );
+  eq("Colación proporcional (20/30)", noImp.colacion, 40000);
+  eq("Movilización proporcional (20/30)", noImp.movilizacion, 20000);
+  eq("No imponible total proporcional", noImp.totalNoImponible, 60000);
+
+  // Límites: no pasa de 30 ni queda en negativo
+  const todo = calcularTrabajador({ ...base, diasAusentes: 40, diasLicencia: 5 }, octubre);
+  eq("Más de 30 días ausentes: 0 trabajados", todo.diasTrabajados, 0);
+  eq("Mes completo ausente: sin sueldo", todo.sueldoBase, 0);
+  ok("Mes completo ausente: líquido no negativo", todo.liquido >= 0);
+}
+
 // Los tests del motor de finiquito viven en finiquito.test.ts (npm run test:finiquito).
 
 if (fallas > 0) {
