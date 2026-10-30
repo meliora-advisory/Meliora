@@ -96,7 +96,7 @@ export interface LiquidacionTrabajador {
   diasTrabajados: number;
   diasAusentes: number;
   diasLicencia: number;
-  /** Lo que se deja de pagar por ausencias y licencia (sueldo base y gratificación) */
+  /** Lo que se deja de pagar por ausencias y licencia en sueldo base, gratificación, colación y movilización */
   descuentoDias: number;
   /** Asignación familiar del mes (no imponible, ya proporcional a los días trabajados) */
   asignacionFamiliar: number;

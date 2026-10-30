@@ -482,6 +482,15 @@ console.log("\nDías ausentes y licencia médica");
   );
   eq("Asignación proporcional (15/30): 45.202 / 2", conAsig.asignacionFamiliar, 22601);
 
+  // Colación y movilización también por días trabajados
+  const noImp = calcularTrabajador(
+    { ...base, colacion: 60000, movilizacion: 30000, diasAusentes: 5, diasLicencia: 5 },
+    octubre
+  );
+  eq("Colación proporcional (20/30)", noImp.colacion, 40000);
+  eq("Movilización proporcional (20/30)", noImp.movilizacion, 20000);
+  eq("No imponible total proporcional", noImp.totalNoImponible, 60000);
+
   // Límites: no pasa de 30 ni queda en negativo
   const todo = calcularTrabajador({ ...base, diasAusentes: 40, diasLicencia: 5 }, octubre);
   eq("Más de 30 días ausentes: 0 trabajados", todo.diasTrabajados, 0);

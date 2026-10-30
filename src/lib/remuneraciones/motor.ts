@@ -60,11 +60,12 @@ export function calcularTrabajador(
   );
   const diasTrabajados = 30 - diasAusentes - diasLicencia;
   const proporcion = diasTrabajados / 30;
+  // Colación y movilización se pagan solo por los días trabajados
+  const colacion = r(Math.max(0, e.colacion || 0) * proporcion);
+  const movilizacion = r(Math.max(0, e.movilizacion || 0) * proporcion);
   const sueldoBase = r(sueldoPactado * proporcion);
   const horas = Math.max(0, e.horasExtra || 0);
   const otrosImponibles = Math.max(0, e.otrosImponibles || 0);
-  const colacion = Math.max(0, e.colacion || 0);
-  const movilizacion = Math.max(0, e.movilizacion || 0);
   const otrosDescuentos = Math.max(0, e.otrosDescuentos || 0);
 
   const horasExtra = r(valorHoraExtra(sueldoPactado, p) * horas);
@@ -94,7 +95,11 @@ export function calcularTrabajador(
         ? Math.max(0, e.gratificacionManual || 0)
         : 0;
   const descuentoDias =
-    sueldoPactado - sueldoBase + (gratificacionCompleta - gratificacion);
+    sueldoPactado -
+    sueldoBase +
+    (gratificacionCompleta - gratificacion) +
+    (Math.max(0, e.colacion || 0) - colacion) +
+    (Math.max(0, e.movilizacion || 0) - movilizacion);
 
   // Asignación familiar: el tramo sale de la remuneración del mes y el monto se
   // paga por los días trabajados. No es imponible ni tributable.

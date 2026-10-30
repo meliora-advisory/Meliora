@@ -452,7 +452,7 @@ export function CalculadoraRemuneraciones() {
                   inputMode="numeric"
                   className={inputClass}
                   placeholder="0"
-                  title="Días sin goce de sueldo: se descuentan del sueldo base y la gratificación sobre 30 días"
+                  title="Días sin goce de sueldo: se descuentan del sueldo, la gratificación, colación y movilización sobre 30 días"
                   value={diasAusentes}
                   onChange={(e) => setDiasAusentes(e.target.value.replace(/\D/g, "").slice(0, 2))}
                 />
@@ -563,7 +563,7 @@ export function CalculadoraRemuneraciones() {
               {liq.descuentoDias > 0 && (
                 <p className="text-xs text-slate-400 mt-1">
                   Por {liq.diasAusentes + liq.diasLicencia} día(s) sin trabajar se
-                  dejan de pagar {fmt(liq.descuentoDias)} de sueldo base y gratificación.
+                  dejan de pagar {fmt(liq.descuentoDias)} en sueldo, gratificación y no imponibles.
                   {liq.diasLicencia > 0 &&
                     " El subsidio por licencia médica lo paga la isapre o la caja y no se calcula aquí."}
                 </p>
