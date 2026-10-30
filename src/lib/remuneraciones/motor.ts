@@ -13,6 +13,17 @@ export function topeGratificacionMensual(p: ParametrosPeriodo): number {
   return r((4.75 * p.ingresoMinimo) / 12);
 }
 
+/** Asignación familiar de un mes completo según el ingreso y las cargas. */
+export function asignacionFamiliarMensual(
+  ingreso: number,
+  cargas: number,
+  p: ParametrosPeriodo
+): { tramo: string; monto: number } {
+  const t = p.asignacionFamiliar.find((x) => ingreso <= x.hasta);
+  if (!t) return { tramo: "D", monto: 0 };
+  return { tramo: t.tramo, monto: t.monto * Math.max(0, Math.floor(cargas)) };
+}
+
 /**
  * Valor de la hora extraordinaria (recargo 50%) para sueldo mensual y
  * jornada semanal dadas: (sueldo/30) × 28 / (4 × jornada) × 1,5.
@@ -41,25 +52,55 @@ export function calcularTrabajador(
   e: EntradaTrabajador,
   p: ParametrosPeriodo
 ): LiquidacionTrabajador {
-  const sueldoBase = Math.max(0, e.sueldoBase || 0);
+  const sueldoPactado = Math.max(0, e.sueldoBase || 0);
+  const diasAusentes = Math.min(30, Math.max(0, Math.floor(e.diasAusentes || 0)));
+  const diasLicencia = Math.min(
+    30 - diasAusentes,
+    Math.max(0, Math.floor(e.diasLicencia || 0))
+  );
+  const diasTrabajados = 30 - diasAusentes - diasLicencia;
+  const proporcion = diasTrabajados / 30;
+  const sueldoBase = r(sueldoPactado * proporcion);
   const horas = Math.max(0, e.horasExtra || 0);
   const otrosImponibles = Math.max(0, e.otrosImponibles || 0);
   const colacion = Math.max(0, e.colacion || 0);
   const movilizacion = Math.max(0, e.movilizacion || 0);
   const otrosDescuentos = Math.max(0, e.otrosDescuentos || 0);
 
-  const horasExtra = r(valorHoraExtra(sueldoBase, p) * horas);
+  const horasExtra = r(valorHoraExtra(sueldoPactado, p) * horas);
 
   // 1–2. Haberes imponibles y gratificación legal
   const devengado = sueldoBase + horasExtra + otrosImponibles;
   let gratificacion = 0;
   if (e.modoGratificacion === "legal") {
-    gratificacion = Math.min(r(devengado * 0.25), topeGratificacionMensual(p));
+    gratificacion = Math.min(
+      r(devengado * 0.25),
+      r(topeGratificacionMensual(p) * proporcion)
+    );
   } else if (e.modoGratificacion === "manual") {
-    gratificacion = Math.max(0, e.gratificacionManual || 0);
+    gratificacion = r(Math.max(0, e.gratificacionManual || 0) * proporcion);
   }
   const totalImponible = devengado + gratificacion;
-  const totalNoImponible = colacion + movilizacion;
+
+  // Lo que se deja de pagar por los días sin trabajar: sueldo base y la
+  // gratificación pactada, a razón de días trabajados sobre 30.
+  const gratificacionCompleta =
+    e.modoGratificacion === "legal"
+      ? Math.min(
+          r((sueldoPactado + horasExtra + otrosImponibles) * 0.25),
+          topeGratificacionMensual(p)
+        )
+      : e.modoGratificacion === "manual"
+        ? Math.max(0, e.gratificacionManual || 0)
+        : 0;
+  const descuentoDias =
+    sueldoPactado - sueldoBase + (gratificacionCompleta - gratificacion);
+
+  // Asignación familiar: el tramo sale de la remuneración del mes y el monto se
+  // paga por los días trabajados. No es imponible ni tributable.
+  const af = asignacionFamiliarMensual(totalImponible, e.cargasFamiliares || 0, p);
+  const asignacionFamiliar = r(af.monto * proporcion);
+  const totalNoImponible = colacion + movilizacion + asignacionFamiliar;
 
   // 3. Bases de cotización independientes (topes distintos)
   const topeImponible = r(p.topeImponibleUF * p.uf);
@@ -106,6 +147,13 @@ export function calcularTrabajador(
 
   return {
     sueldoBase,
+    sueldoBasePactado: sueldoPactado,
+    diasTrabajados,
+    diasAusentes,
+    diasLicencia,
+    descuentoDias,
+    asignacionFamiliar,
+    tramoAsignacion: af.tramo,
     gratificacion,
     horasExtra,
     otrosImponibles,

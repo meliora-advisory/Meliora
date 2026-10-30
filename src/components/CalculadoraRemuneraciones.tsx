@@ -89,6 +89,9 @@ export function CalculadoraRemuneraciones() {
   const [movilizacion, setMovilizacion] = useState("");
   const [otrosDescuentos, setOtrosDescuentos] = useState("");
   const [mutualRecargo, setMutualRecargo] = useState("");
+  const [cargas, setCargas] = useState("");
+  const [diasAusentes, setDiasAusentes] = useState("");
+  const [diasLicencia, setDiasLicencia] = useState("");
 
   const periodo = periodos.find((p) => p.clave === periodoKey) ?? periodos[0];
 
@@ -110,6 +113,9 @@ export function CalculadoraRemuneraciones() {
         movilizacion: parseCLP(movilizacion),
         otrosDescuentos: parseCLP(otrosDescuentos),
         mutualRecargo: parseUF(mutualRecargo),
+        cargasFamiliares: parseCLP(cargas),
+        diasAusentes: parseCLP(diasAusentes),
+        diasLicencia: parseCLP(diasLicencia),
       },
       periodo
     );
@@ -127,6 +133,9 @@ export function CalculadoraRemuneraciones() {
     movilizacion,
     otrosDescuentos,
     mutualRecargo,
+    cargas,
+    diasAusentes,
+    diasLicencia,
     periodo,
   ]);
 
@@ -419,6 +428,51 @@ export function CalculadoraRemuneraciones() {
               </div>
             </div>
 
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label htmlFor="calc-cargas" className={labelClass}>
+                  Cargas familiares
+                </label>
+                <input
+                  id="calc-cargas"
+                  inputMode="numeric"
+                  className={inputClass}
+                  placeholder="0"
+                  title="Asignación familiar: el tramo se define según el ingreso del mes"
+                  value={cargas}
+                  onChange={(e) => setCargas(e.target.value.replace(/\D/g, "").slice(0, 2))}
+                />
+              </div>
+              <div>
+                <label htmlFor="calc-ausentes" className={labelClass}>
+                  Días ausentes
+                </label>
+                <input
+                  id="calc-ausentes"
+                  inputMode="numeric"
+                  className={inputClass}
+                  placeholder="0"
+                  title="Días sin goce de sueldo: se descuentan del sueldo base y la gratificación sobre 30 días"
+                  value={diasAusentes}
+                  onChange={(e) => setDiasAusentes(e.target.value.replace(/\D/g, "").slice(0, 2))}
+                />
+              </div>
+              <div>
+                <label htmlFor="calc-licencia" className={labelClass}>
+                  Días de licencia médica
+                </label>
+                <input
+                  id="calc-licencia"
+                  inputMode="numeric"
+                  className={inputClass}
+                  placeholder="0"
+                  title="El empleador no paga esos días; el subsidio de la licencia lo paga la isapre o la caja y no se calcula aquí"
+                  value={diasLicencia}
+                  onChange={(e) => setDiasLicencia(e.target.value.replace(/\D/g, "").slice(0, 2))}
+                />
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="calc-od" className={labelClass}>
@@ -484,7 +538,11 @@ export function CalculadoraRemuneraciones() {
               <p className="text-xs font-semibold text-emerald uppercase tracking-wider mb-1">
                 Haberes
               </p>
-              <Fila label="Sueldo base" value={liq.sueldoBase} />
+              <Fila
+                label="Sueldo base"
+                value={liq.sueldoBase}
+                note={liq.diasTrabajados < 30 ? `${liq.diasTrabajados} de 30 días` : undefined}
+              />
               {liq.horasExtra > 0 && <Fila label="Horas extra (50%)" value={liq.horasExtra} />}
               {liq.gratificacion > 0 && <Fila label="Gratificación" value={liq.gratificacion} />}
               {liq.otrosImponibles > 0 && <Fila label="Otros imponibles" value={liq.otrosImponibles} />}
@@ -495,8 +553,20 @@ export function CalculadoraRemuneraciones() {
                 <Fila
                   label="No imponibles"
                   value={liq.totalNoImponible}
-                  note="colación + movilización"
+                  note={
+                    liq.asignacionFamiliar > 0
+                      ? `incluye asignación familiar ${fmt(liq.asignacionFamiliar)} (tramo ${liq.tramoAsignacion})`
+                      : "colación + movilización"
+                  }
                 />
+              )}
+              {liq.descuentoDias > 0 && (
+                <p className="text-xs text-slate-400 mt-1">
+                  Por {liq.diasAusentes + liq.diasLicencia} día(s) sin trabajar se
+                  dejan de pagar {fmt(liq.descuentoDias)} de sueldo base y gratificación.
+                  {liq.diasLicencia > 0 &&
+                    " El subsidio por licencia médica lo paga la isapre o la caja y no se calcula aquí."}
+                </p>
               )}
 
               <p className="text-xs font-semibold text-emerald uppercase tracking-wider mt-5 mb-1">

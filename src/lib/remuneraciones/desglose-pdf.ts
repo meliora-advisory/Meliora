@@ -46,7 +46,15 @@ export function panelesLiquidacion(
   const liq = costo.liquidacion;
   const bloques: Bloque[] = [];
 
-  const haberes: FilaPDF[] = [{ etiqueta: "Sueldo base", valor: fmt(liq.sueldoBase) }];
+  const haberes: FilaPDF[] = [
+    {
+      etiqueta: "Sueldo base",
+      valor: fmt(liq.sueldoBase),
+      ...(liq.diasTrabajados < 30 && {
+        nota: `${liq.diasTrabajados} de 30 días`,
+      }),
+    },
+  ];
   if (liq.horasExtra > 0)
     haberes.push({ etiqueta: "Horas extra (50%)", valor: fmt(liq.horasExtra) });
   if (liq.gratificacion > 0)
@@ -67,6 +75,13 @@ export function panelesLiquidacion(
       etiqueta: "Movilización",
       valor: fmt(liq.movilizacion),
       nota: "no imponible",
+    });
+
+  if (liq.asignacionFamiliar > 0)
+    noImponibles.push({
+      etiqueta: "Asignación familiar",
+      valor: fmt(liq.asignacionFamiliar),
+      nota: `tramo ${liq.tramoAsignacion}, no imponible`,
     });
 
   bloques.push({
